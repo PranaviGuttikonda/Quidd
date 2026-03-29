@@ -1,6 +1,6 @@
+import { Platform } from 'react-native';
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type ColorScheme = 'dark' | 'light' | 'system';
 
@@ -12,6 +12,11 @@ interface SettingsState {
   setColorScheme: (scheme: ColorScheme) => void;
   setNotificationsEnabled: (enabled: boolean) => void;
 }
+
+const storage = createJSONStorage(() => {
+  if (Platform.OS === 'web') return localStorage;
+  return require('@react-native-async-storage/async-storage').default;
+});
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
@@ -27,7 +32,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'quidd-settings',
-      storage: createJSONStorage(() => AsyncStorage),
+      storage,
     }
   )
 );

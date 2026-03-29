@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useIsDark } from '@/hooks/useTheme';
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -12,13 +13,19 @@ const tabs: { name: string; title: string; icon: IoniconsName }[] = [
 ];
 
 export default function TabLayout() {
+  const isDark = useIsDark();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: '#0a0a1a', borderTopColor: '#1a1a38' },
-        tabBarActiveTintColor: '#ff6ec7',
-        tabBarInactiveTintColor: '#55557a',
+        tabBarStyle: {
+          backgroundColor: isDark ? '#0a0a1a' : '#ffffff',
+          borderTopColor: isDark ? '#1a1a38' : 'rgba(180,100,0,0.10)',
+          borderTopWidth: 1,
+        },
+        tabBarActiveTintColor: isDark ? '#ff6ec7' : '#ff6b6b',
+        tabBarInactiveTintColor: isDark ? '#55557a' : '#c09070',
       }}
     >
       {tabs.map((tab) => (
